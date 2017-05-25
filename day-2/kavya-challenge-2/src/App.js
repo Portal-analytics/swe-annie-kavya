@@ -53,11 +53,6 @@ class App extends Component {
     );
   }
 
-
-  // if(this.state.currentIndex = quotes.length){
-
-  // }
-
 }
 
 export default App;
