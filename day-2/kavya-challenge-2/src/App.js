@@ -1,49 +1,80 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import AppBar from 'material-ui/AppBar';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
 
-var index = 0;
 var quotes = ["Believe in your fucking self.", "Stay up all fucking night.", "Use fucking spell check.", 
         "Don't fucking procrastinate.","Get over your fucking self.", "Keep fucking learning.", "Fucking network.", 
         "Asking for fucking help.", "Do your fucking research."]
 var len = quotes.length;
-class App extends Component {
-  
-  
+
+const AppBarIcon = () => (
+    <AppBar
+      title="Great Fucking Life Advice"
+      iconClassNameRight="muidocs-icon-navigation-expand-more"
+      style={{
+        backgroundColor: 'black',
+      }}
+      />
+  );
+
+const style = {
+  margin: 12,
+};
+
+const QuoteButton = () => (
+  <div>
+    <RaisedButton label="Change Quote" style={style} />
+  </div>
+);  
+
+const RandomButton = () => (
+  <div>
+    <RaisedButton label="Random Quote" style={style} />
+  </div>
+)
+
+class App extends Component { 
+
   constructor(props) {
     super(props);
-    this.state = {currentIndex: index};
+    this.state = {quoteIndex: 0};
     this.changeQuote = this.changeQuote.bind(this);
   }
   
   //this.state.currentIndex.this.setState(this.state.currentIndex += 1)
     changeQuote() {
-      if(this.state.currentIndex == len-1){
-        index = 0;
+      if(this.state.quoteIndex == len-1){
         this.setState({
-          currentIndex: index
+          quoteIndex: 0
         });
       }
       else{
         this.setState({
-          currentIndex: index++ 
+          quoteIndex: this.state.quoteIndex + 1
       });
       } 
     }
-  
-  
+
+
   render() {
     return (
       <div className="App">
-          <div className = "Heading">
-          <h1> Great Fucking </h1>
-          <h1> Startup Advice </h1>
+        <MuiThemeProvider>
+          <AppBarIcon />
+          </MuiThemeProvider>
+          <MuiThemeProvider>
+          <div> 
+            <h1 className = "Quotes"  > 
+              {quotes[this.state.quoteIndex]} 
+            </h1>  
+            <div onClick={this.changeQuote} >
+              <QuoteButton /> 
+            </div>
           </div>
-          <div className = "Quotes">
-            <h1 onClick={this.changeQuote}> 
-              {quotes[this.state.currentIndex]} 
-              </h1>
-          </div>
+          </MuiThemeProvider> 
           <div className = "bottom">
             <h1> 
               A project by Annie and Kavya.
