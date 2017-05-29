@@ -4,13 +4,13 @@ import './App.css';
 import AppBar from 'material-ui/AppBar';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
+import randomString from 'random-string';
 
 
 var index = 0;
 var quotes = ["Believe in your fucking self.", "Stay up all fucking night.", "Use fucking spell check.", 
-    "Don't fucking procrastinate.","Get over your fucking self.", "Keep fucking learning.", "Fucking network.", 
+    "Don't fucking procrastinate.","Get over your fucking self.", "Keep fucking learning.", 
     "Asking for fucking help.", "Do your fucking research."]
-
 var len = quotes.length;
 
 const AppBarExampleIcon = () => (
@@ -18,7 +18,6 @@ const AppBarExampleIcon = () => (
       title="Great Fucking Startup Advice"
       iconClassNameRight="muidocs-icon-navigation-expand-more"
     />
- 
 );
 
 const style = {
@@ -65,19 +64,26 @@ class App extends Component {
      <MuiThemeProvider>
        <AppBarExampleIcon/>
     </MuiThemeProvider>
+
     <MuiThemeProvider>
       <div onClick={this.changeQuote}>
         <RaisedButtonExampleSimple />
       </div>
     </MuiThemeProvider>
-    <MuiThemeProvider>
-      <RandomButton/>
-    </MuiThemeProvider>
+
+
      <div className = "Quotes">
       <h1> 
        {quotes[this.state.currentIndex]} 
        </h1>
      </div>
+
+     <MuiThemeProvider>
+       <div onClick={this.changeQuote}>
+        <RandomButton/>
+      </div>
+    </MuiThemeProvider>
+
      <div className = "bottom">
       <h1> 
        A project by Annie and Kavya.
