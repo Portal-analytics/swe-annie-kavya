@@ -131,7 +131,7 @@ export default class contractTracker extends Component {
                     <div>
                         <TextField hintText={"Enter price"} value={this.state.price} onChange={this.handlePriceChange}/>
                     </div>
-                    <RaisedButton label={this.state.buttonState ? 'Submit' : 'ReSubmit'} onTouchTap={this.state.buttonState ? this.onSubmit : () => this.handleReSubmit(index)}/>
+                    <RaisedButton label={this.state.buttonState ? 'Submit' : 'ReSubmit'} onTouchTap={this.state.buttonState ? this.onSubmit : () => this.handleReSubmit()}/>
                     <table>
                         <th> Title </th>
                         <th> Description </th>
