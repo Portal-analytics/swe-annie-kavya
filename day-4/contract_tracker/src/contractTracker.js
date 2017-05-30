@@ -28,7 +28,8 @@ injectTapEventPlugin();
         </TableHeader>
         <TableBody>
             <TableRow>
-                
+                <TableRowColumn>{this.contracts.contract.name}</TableRowColumn>
+                <TableRowColumn>{this.contracts.contract.price}</TableRowColumn>
             </TableRow>
         </TableBody>
     </Table>
@@ -95,7 +96,7 @@ export default class contractTracker extends Component {
         };
 
         this.state.contracts.push(contract);
-        console.log(contracts)
+        console.log(this.state.contracts)
     }
 
     render () {
