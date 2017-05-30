@@ -18,23 +18,6 @@ import ReactDOM from 'react-dom';
 
 injectTapEventPlugin();
 
-/*const ContractTable = ({contracts}) => (
-    <Table>
-        <TableHeader>
-            <TableRow>
-                <TableHeaderColumn>Title</TableHeaderColumn>
-                <TableHeaderColumn>Price</TableHeaderColumn>
-            </TableRow>
-        </TableHeader>
-        <TableBody>
-            <TableRow>
-                <TableRowColumn>{this.contracts.contract.name}</TableRowColumn>
-                <TableRowColumn>{this.contracts.contract.price}</TableRowColumn>
-            </TableRow>
-        </TableBody>
-    </Table>
-);*/
-
 
 export default class contractTracker extends Component {
     constructor(props) {
@@ -43,7 +26,9 @@ export default class contractTracker extends Component {
             name: "",
             description: "",
             price: "",
-            contracts: []
+            currentIndex: 0,
+            contracts: [],
+            buttonState: true
         };
     }
 
@@ -86,6 +71,7 @@ export default class contractTracker extends Component {
             price, 
             contracts: this.state.contracts
         });
+
     }    
     
     onSubmit = (contracts) => {
@@ -95,8 +81,41 @@ export default class contractTracker extends Component {
             price: this.state.price
         };
 
-        this.state.contracts.push(contract);
-        console.log(this.state.contracts)
+        this.setState({
+            name: "",
+            description: "",
+            price: "",
+            contracts: this.state.contracts.concat([contract]), 
+           
+        });
+
+    }
+
+    onEditButtonClick = (index) => {
+        var currentContract = this.state.contracts[index]
+        this.setState({
+            ...this.state,
+            name: currentContract.name,
+            description: currentContract.description,
+            price: currentContract.price,
+            buttonState: !this.state.buttonState
+        });
+        
+    }
+
+    handleReSubmit = (index) => {
+        const updated_contract = {
+            name: this.state.name,
+            description: this.state.description,
+            price: this.state.price,
+        };
+        var updated_list = this.state.contracts.slice(0)
+        updated_list[index] = updated_contract
+        this.setState({
+            ...this.state,
+            buttonState: !this.state.buttonState,
+            contracts: updated_list
+        });
     }
 
     render () {
@@ -105,17 +124,30 @@ export default class contractTracker extends Component {
                 <div>
                     <div>
                         <TextField hintText={"Enter name"} value={this.state.name} onChange={this.handleNameChange}/>
-                    </div>
-                        
+                    </div>    
                     <div>
                         <TextField hintText={"Enter description"} value={this.state.description} onChange={this.handleDescriptionChange}/>
                     </div>
                     <div>
                         <TextField hintText={"Enter price"} value={this.state.price} onChange={this.handlePriceChange}/>
                     </div>
-                    <RaisedButton label="Submit" onTouchTap={this.onSubmit}/>
+                    <RaisedButton label={this.state.buttonState ? 'Submit' : 'ReSubmit'} onTouchTap={this.state.buttonState ? this.onSubmit : () => this.handleReSubmit(index)}/>
+                    <table>
+                        <th> Title </th>
+                        <th> Description </th>
+                        <th> Price </th>
+                        {this.state.contracts.map( (contractItem, index) => {
+                                return (
+                                        <tr key={index}>
+                                            <td> {contractItem.name} </td>
+                                            <td> {contractItem.description} </td>
+                                            <td> {contractItem.price} </td>
+                                            <button onClick={() => this.onEditButtonClick(index)}> Edit </button>
+                                        </tr> 
+                                ); 
+                            })}
+                    </table>   
                 </div>
-                {/*<ContractTable contracts={this.state.contracts} />*/}
             </MuiThemeProvider>
 
 
