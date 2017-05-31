@@ -89,7 +89,7 @@ export default class contractTracker extends Component {
             contracts: this.state.contracts.concat([contract]), 
            
         });
-        console.log(this.state.contracts);
+        
     }
 
     onEditButtonClick = (index) => {
@@ -99,26 +99,26 @@ export default class contractTracker extends Component {
             name: currentContract.name,
             description: currentContract.description,
             price: currentContract.price,
-            buttonState: !this.state.buttonState
+            buttonState: !this.state.buttonState,
+            selectedContractIndex: index
         });
         
     }
 
-    handleReSubmit = (index) => {
+    handleReSubmit = () => {
         const updated_contract = {
             name: this.state.name,
             description: this.state.description,
             price: this.state.price,
         };
         var updated_list = this.state.contracts.slice(0)
-        updated_list[index] = updated_contract
+        updated_list[this.state.selectedContractIndex] = updated_contract
+
         this.setState({
             ...this.state,
             buttonState: !this.state.buttonState,
-            updated_contracts: updated_list
+            contracts: updated_list
         });
-        
-        console.log(this.state.updated_contracts);
     }
 
     render () {
@@ -134,12 +134,12 @@ export default class contractTracker extends Component {
                     <div>
                         <TextField hintText={"Enter price"} value={this.state.price} onChange={this.handlePriceChange}/>
                     </div>
-                    <RaisedButton label={this.state.buttonState ? 'Submit' : 'ReSubmit'} onTouchTap={this.state.buttonState ? this.onSubmit : () => this.handleReSubmit()}/>
+                    <RaisedButton label={this.state.buttonState ? 'Submit' : 'ReSubmit'} onTouchTap={this.state.buttonState ? this.onSubmit : this.handleReSubmit}/>
                     <table>
                         <th> Title </th>
                         <th> Description </th>
                         <th> Price </th>
-                        {this.state.buttonState && this.state.contracts.map( (contractItem, index) => {
+                        {this.state.contracts.map( (contractItem, index) => {
                                 return (
                                         <tr key={index}>
                                             <td> {contractItem.name} </td>
@@ -148,18 +148,7 @@ export default class contractTracker extends Component {
                                             <button onClick={() => this.onEditButtonClick(index)}> Edit </button>
                                         </tr> 
                                 ); 
-                            })}
-
-                       {!this.state.buttonState && this.state.updated_contracts.map( (contractItem, index) => {
-                                return (
-                                        <tr key={index}>
-                                            <td> {contractItem.name} </td>
-                                            <td> {contractItem.description} </td>
-                                            <td> {contractItem.price} </td>
-                                            <button onClick={() => this.onEditButtonClick(index)}> Edit </button>
-                                        </tr> 
-                                ); 
-                            })}    
+                            })}  
                     </table>   
                 </div>
             </MuiThemeProvider>
