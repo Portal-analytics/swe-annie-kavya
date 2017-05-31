@@ -16,8 +16,29 @@ import {
 
 import ReactDOM from 'react-dom';
 
+import * as firebase from "firebase";
+
+
+
+var config = {
+  apiKey: "IzaSyCNNi717hivkLSZrCArfc5ZPIuc2_V8X4g",
+  authDomain: "contracttracker-141a6.firebaseapp.com",
+  databaseURL: "https://contracttracker-141a6.firebaseio.com",
+  storageBucket: "contracttracker-141a6.appspot.com",
+};
+firebase.initializeApp(config);
+
 injectTapEventPlugin();
 
+var database = firebase.database();
+
+// function writeUserData(userId) {
+//   firebase.database().ref('users/' + userId).set({
+//     username: "annie",
+//     email: "sds",
+//   });
+// }
+// writeUserData(1234);
 
 export default class contractTracker extends Component {
     constructor(props) {
@@ -33,21 +54,13 @@ export default class contractTracker extends Component {
         };
     }
 
-    /*
-    handleInputChange(field, e) {
-        const value = e.target.value;
-        field = "name";
-        this.setState({
-            ...this.state,
-            
-            field: name, // attribute called field that is assigned to name prop
-            [field]: value, // brackets evaulate field to name, then name attribute is set to value
-            
-            name: value,
-            "name" : value
-        })
-    }
-    */
+    // componentWillMount = () => {
+    //     return (
+    //         firebase.database().ref('/' + {selectedContractIndex}).once('value').then(function(snapshot) {
+    //             var 
+    //         })
+    //     )
+    // };
 
     handleNameChange = (event, name) => {
         this.setState({
@@ -74,14 +87,33 @@ export default class contractTracker extends Component {
         });
 
     }    
+
+    writeContract = (name, description, price) => {
+      
+      firebase.database().ref('/contracts ' + name).set({
+        name: name,
+        description: description,
+        price: price,
+      });
+    }
     
+    reWriteContract = (name, description, price) => {
+        firebase.database().ref('/contracts ' + name).set({
+        name: name,
+        description: description,
+        price: price,
+      });
+    }
+
     onSubmit = (contracts) => {
         const contract = {
             name: this.state.name,
             description: this.state.description,
-            price: this.state.price
+            price: this.state.price,
         };
 
+        this.writeContract(this.state.name, this.state.description, this.state.price);
+        
         this.setState({
             name: "",
             description: "",
@@ -89,7 +121,7 @@ export default class contractTracker extends Component {
             contracts: this.state.contracts.concat([contract]), 
            
         });
-        
+   
     }
 
     onEditButtonClick = (index) => {
@@ -111,6 +143,7 @@ export default class contractTracker extends Component {
             description: this.state.description,
             price: this.state.price,
         };
+        
         var updated_list = this.state.contracts.slice(0)
         updated_list[this.state.selectedContractIndex] = updated_contract
 
@@ -119,6 +152,8 @@ export default class contractTracker extends Component {
             buttonState: !this.state.buttonState,
             contracts: updated_list
         });
+
+        this.reWriteContract(this.state.name, this.state.description, this.state.price);
     }
 
     render () {
