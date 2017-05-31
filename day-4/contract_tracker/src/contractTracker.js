@@ -28,6 +28,7 @@ export default class contractTracker extends Component {
             price: "",
             currentIndex: 0,
             contracts: [],
+            updated_contracts: [],
             buttonState: true
         };
     }
@@ -88,7 +89,7 @@ export default class contractTracker extends Component {
             contracts: this.state.contracts.concat([contract]), 
            
         });
-
+        console.log(this.state.contracts);
     }
 
     onEditButtonClick = (index) => {
@@ -114,8 +115,10 @@ export default class contractTracker extends Component {
         this.setState({
             ...this.state,
             buttonState: !this.state.buttonState,
-            contracts: updated_list
+            updated_contracts: updated_list
         });
+        
+        console.log(this.state.updated_contracts);
     }
 
     render () {
@@ -136,7 +139,7 @@ export default class contractTracker extends Component {
                         <th> Title </th>
                         <th> Description </th>
                         <th> Price </th>
-                        {this.state.contracts.map( (contractItem, index) => {
+                        {this.state.buttonState && this.state.contracts.map( (contractItem, index) => {
                                 return (
                                         <tr key={index}>
                                             <td> {contractItem.name} </td>
@@ -146,6 +149,17 @@ export default class contractTracker extends Component {
                                         </tr> 
                                 ); 
                             })}
+
+                       {!this.state.buttonState && this.state.updated_contracts.map( (contractItem, index) => {
+                                return (
+                                        <tr key={index}>
+                                            <td> {contractItem.name} </td>
+                                            <td> {contractItem.description} </td>
+                                            <td> {contractItem.price} </td>
+                                            <button onClick={() => this.onEditButtonClick(index)}> Edit </button>
+                                        </tr> 
+                                ); 
+                            })}    
                     </table>   
                 </div>
             </MuiThemeProvider>
