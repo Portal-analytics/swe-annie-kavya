@@ -19,7 +19,6 @@ import ReactDOM from 'react-dom';
 import * as firebase from "firebase";
 
 
-
 var config = {
   apiKey: "IzaSyCNNi717hivkLSZrCArfc5ZPIuc2_V8X4g",
   authDomain: "contracttracker-141a6.firebaseapp.com",
@@ -32,13 +31,7 @@ injectTapEventPlugin();
 
 var database = firebase.database();
 
-// function writeUserData(userId) {
-//   firebase.database().ref('users/' + userId).set({
-//     username: "annie",
-//     email: "sds",
-//   });
-// }
-// writeUserData(1234);
+var readData = firebase.database().ref('/contracts ');
 
 export default class contractTracker extends Component {
     constructor(props) {
@@ -54,13 +47,16 @@ export default class contractTracker extends Component {
         };
     }
 
-    // componentWillMount = () => {
-    //     return (
-    //         firebase.database().ref('/' + {selectedContractIndex}).once('value').then(function(snapshot) {
-    //             var 
-    //         })
-    //     )
-    // };
+    componentWillMount() {
+        readData.on('value', (snapshot) => {
+            this.setState({
+                ...this.state,
+                contracts: snapshot.val().contracts
+            })
+            console.log(snapshot.val().contracts)
+        });
+    }
+
 
     handleNameChange = (event, name) => {
         this.setState({
@@ -88,20 +84,17 @@ export default class contractTracker extends Component {
 
     }    
 
-    writeContract = (name, description, price) => {
-      
-      firebase.database().ref('/contracts ' + name).set({
-        name: name,
-        description: description,
-        price: price,
+    writeContract = (contracts) => {
+      console.log(contracts);
+      console.log(this.state.contracts);
+      firebase.database().ref('/contracts ').set({
+        contracts: contracts
       });
     }
     
-    reWriteContract = (name, description, price) => {
-        firebase.database().ref('/contracts ' + name).set({
-        name: name,
-        description: description,
-        price: price,
+    reWriteContract = (contracts) => {
+        firebase.database().ref('/contracts ').set({
+        contracts: contracts
       });
     }
 
@@ -112,8 +105,7 @@ export default class contractTracker extends Component {
             price: this.state.price,
         };
 
-        this.writeContract(this.state.name, this.state.description, this.state.price);
-        
+   
         this.setState({
             name: "",
             description: "",
@@ -121,6 +113,9 @@ export default class contractTracker extends Component {
             contracts: this.state.contracts.concat([contract]), 
            
         });
+        
+        console.log(contracts);
+        this.writeContract(this.state.contracts.concat([contract]));
    
     }
 
@@ -153,7 +148,7 @@ export default class contractTracker extends Component {
             contracts: updated_list
         });
 
-        this.reWriteContract(this.state.name, this.state.description, this.state.price);
+        this.reWriteContract(this.state.updated_contracts.concat([updated_contract]));
     }
 
     render () {
