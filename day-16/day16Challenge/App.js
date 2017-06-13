@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "stretch",
-    backgroundColor: "white"
+    backgroundColor: "#F5FCFF"
   },
   sidebar: {
     backgroundColor: "green"
