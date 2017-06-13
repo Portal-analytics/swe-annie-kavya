@@ -5,7 +5,8 @@ import {
   View,
   Image,
   TouchableOpacity,
-  Button
+  Button,
+  Navigator
 } from "react-native";
 import { NativeRouter, Route, Link } from "react-router-native";
 import SideMenu from "react-native-side-menu";
@@ -13,7 +14,7 @@ import SideMenu from "react-native-side-menu";
 import Settings from "./Settings";
 import Home from "./Home";
 import Menu from "./Menu";
-// import settingpicture from "./settings.png";
+import settingpicture from "./settings.png";
 
 const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
 
@@ -41,9 +42,6 @@ export default class App extends Component {
       >
         <View style={styles.container}>
           <Nav />
-          <Text style={styles.welcome}>
-            Welcome to React Native!
-          </Text>
         </View>
       </SideMenu>
     );
@@ -60,18 +58,23 @@ class Nav extends React.Component {
   render() {
     return (
       <NativeRouter>
-        <View style={styles.nav}>
-          <Link to="/home" underlayColor="#f0f4f7" style={styles.navItem}>
-            <Text> Home </Text>
-          </Link>
-          <Link to="/settings" underlayColor="#f0f4f7" style={styles.navItem}>
-            <View>
-              <Button>
-                {/*<Image source={require(settingpicture)} />*/}
-              </Button>
-            </View>
-          </Link>
-          <Route path="/home" component={Home} />
+        <View style={styles.container}>
+          <View style={styles.nav}>
+            <Link to="/" underlayColor="#f0f4f7" style={styles.navItem}>
+              <Text> Home </Text>
+            </Link>
+
+            <Link to="/settings" underlayColor="#f0f4f7" style={styles.navItem}>
+              <Text>
+                <Image
+                  source={settingpicture}
+                  style={{ width: 32, height: 32 }}
+                />
+              </Text>
+            </Link>
+
+          </View>
+          <Route exact path="/" component={Home} />
           <Route path="/settings" component={Settings} />
         </View>
       </NativeRouter>
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "stretch",
-    backgroundColor: "#F5FCFF"
+    backgroundColor: "white"
   },
   sidebar: {
     backgroundColor: "green"
