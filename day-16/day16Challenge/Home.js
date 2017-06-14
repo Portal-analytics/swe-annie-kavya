@@ -7,7 +7,8 @@ import {
   Button,
   ScrollView
 } from "react-native";
-
+import firebaseData from "./firebaseconfig";
+import * as firebase from "firebase";
 export default class Home extends Component {
   render() {
     return (
@@ -27,8 +28,28 @@ export class TextApp extends Component {
   onSubmit = text => {
     var date = new Date().toTimeString().slice(0, 5);
     var textToAdd = text;
-    var newtextList = this.state.textList.slice(0);
-    newtextList = newtextList.concat([textToAdd]);
+    var newtextList = this.state.textList;
+    newtextList = newtextList.push({
+      quote: textToAdd,
+      date: date
+    });
+    firebase.database().ref("/kavya-annie").set({
+      quotes: newtextList
+    });
+    var readData = firebase.database().ref("/kavya-annie");
+    readData.on("value", snapshot => {
+      if (snapshot.val() === null) {
+        this.setState({
+          ...this.state,
+          textList: []
+        });
+      } else {
+        this.setState({
+          ...this.state,
+          textList: snapshot.val().quotes
+        });
+      }
+    });
     this.setState({
       textList: newtextList,
       currentDate: date,
@@ -39,14 +60,6 @@ export class TextApp extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.chatwindow}>
-          <Text style={styles.displayText}>
-            {this.state.textList.map(
-              textToDisplay =>
-                textToDisplay + " " + this.state.currentDate + "\n"
-            )}
-          </Text>
-        </ScrollView>
         <View style={styles.footer}>
           <View style={styles.textbox}>
             <View style={{ flex: 4 }}>
@@ -73,6 +86,19 @@ export class TextApp extends Component {
             </View>
           </View>
         </View>
+        <ScrollView style={styles.chatwindow}>
+          <Text style={styles.displayText}>
+            {this.state.textList.map(textToDisplay => {
+              return (
+                <View>
+                  <Text> {textToDisplay.quote} </Text>
+                  <Text> {textToDisplay.date} </Text>
+                </View>
+              );
+            })}
+          </Text>
+        </ScrollView>
+
       </View>
     );
   }
@@ -91,7 +117,10 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   // footer: {
-  //   justifyContent: "space-between"
+  //   position: "absolute",
+  //   bottom: 0,
+  //   left: 0,
+  //   right: 0
   // },
   textbox: {
     flexDirection: "row",
