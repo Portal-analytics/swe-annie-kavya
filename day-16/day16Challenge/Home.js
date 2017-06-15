@@ -22,16 +22,22 @@ export default class Home extends Component {
 export class TextApp extends Component {
   constructor(props) {
     super(props);
-    this.state = { text: "", textList: [] };
+    this.state = {
+      text: "",
+      textList: []
+    };
   }
 
   onSubmit = text => {
     var date = new Date().toTimeString().slice(0, 5);
-    var textToAdd = text;
+
     var newtextList = this.state.textList;
-    newtextList = newtextList.push({
-      quote: textToAdd,
-      date: date
+    console.log("nexttextList");
+    console.log(newtextList);
+    newtextList.push({
+      quote: text,
+      date: date,
+      name: "kavya-annie"
     });
     firebase.database().ref("/kavya-annie").set({
       quotes: newtextList
@@ -50,14 +56,10 @@ export class TextApp extends Component {
         });
       }
     });
-    this.setState({
-      textList: newtextList,
-      currentDate: date,
-      text: ""
-    });
   };
 
   render() {
+    console.log(this.state.textList);
     return (
       <View style={styles.container}>
         <View style={styles.footer}>
@@ -72,9 +74,6 @@ export class TextApp extends Component {
                 onChangeText={text => {
                   this.setState({ ...this.state, text: text });
                 }}
-                onSubmitEditing={() => {
-                  this.onSubmit(...this.state, this.state.text);
-                }}
                 placeholder="Type here"
               />
             </View>
@@ -87,16 +86,19 @@ export class TextApp extends Component {
           </View>
         </View>
         <ScrollView style={styles.chatwindow}>
-          <Text style={styles.displayText}>
-            {this.state.textList.map(textToDisplay => {
-              return (
-                <View>
-                  <Text> {textToDisplay.quote} </Text>
-                  <Text> {textToDisplay.date} </Text>
-                </View>
-              );
-            })}
-          </Text>
+          <View style={styles.displayText}>
+            {this.state.textList !== null &&
+              this.state.textList.map(textToDisplay => {
+                return (
+                  <View>
+                    <Text> {textToDisplay.quote} </Text>
+                    <Text> {textToDisplay.date} </Text>
+                    <Text> {textToDisplay.name} </Text>
+                  </View>
+                );
+              })}
+
+          </View>
         </ScrollView>
 
       </View>
@@ -107,7 +109,6 @@ export class TextApp extends Component {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "space-between",
-    // alignItems: "center",
     padding: 10,
     flexDirection: "column"
   },
@@ -116,12 +117,7 @@ const styles = StyleSheet.create({
     borderColor: "#888",
     borderRadius: 10
   },
-  // footer: {
-  //   position: "absolute",
-  //   bottom: 0,
-  //   left: 0,
-  //   right: 0
-  // },
+
   textbox: {
     flexDirection: "row",
     width: window.width,
